@@ -41,7 +41,6 @@ elem = browser.find_element_by_xpath('//*[@id="daumSearch"]/fieldset/div/div/but
 elem
 elem.click()
 
-browser.close()  # 브라우저 창 닫기
-browser.quit()   # 브라우저 전부 닫기
-
+browser.close()  # 현재 창만 창 닫기
+browser.quit()   # 잔체 브라우저 닫기
 exit() # 파이썬 종료
