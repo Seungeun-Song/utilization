@@ -1,3 +1,4 @@
+# selenium - 웹 페이지 자동화 , 동적 페이지 일 때 쉬움
 # web driver 설치 - chrome drive.exe
 
 from selenium import webdriver
