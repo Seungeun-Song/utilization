@@ -1,3 +1,5 @@
+# 웹 페이지(HTML) 읽어오기
+
 import requests
 #res = requests.get("http://naver.com")
 #res = requests.get("http://nadocoding.tistory.com")
