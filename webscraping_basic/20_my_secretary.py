@@ -33,15 +33,16 @@ max_degree = weather.find("span", attrs={"class":"max"}).get_text()
 morning_rainfall = weather.find("span", attrs={"class":"point_time morning"}).find("span", attrs = {"class":"num"}).get_text()
 afternoon_rainfall = weather.find("span",attrs={"class":"point_time afternoon"}).find("span",attrs={"class":"num"}).get_text()
 
-dust = weather.find("dd", attrs={"class":"lv2"}).get_text()
-ultra_dust = weather.find("dd",attrs={"class":"lv3"}).get_text()
-
+dust = weather.find("dl", attrs={"class":"indicator"})
+#ultra_dust = weather.find("dd",attrs={"class":"lv3"}).get_text()
+fine_dust = dust.find_all("dd")[0].get_text()
+ultra_dust = dust.find_all("dd")[1].get_text()
 print("[오늘의 날씨]")
 print(weather.find("p",attrs={"class":"cast_txt"}).get_text())
 print(f"현재 {degree}℃ (최저 {min_degree}℃ / 최고 {max_degree}℃ )")
 print(f"오전 강수확률 {morning_rainfall}% / 오후 강수확률 {afternoon_rainfall}%", "\n")
 
-print(f"미세먼지 {dust} ")
+print("미세먼지 {} ".format(fine_dust))
 print(f"초미세먼지 {ultra_dust}","\n")
 
 
@@ -59,7 +60,7 @@ for idx, new in enumerate(news):
     if idx >= 3:
         break
     else:    
-        print(idx+1+". ",new.get_text().strip())
+        print(idx+1,". ",new.get_text().strip())
         print("링크 : https://news.naver.com/"+ new.a["href"])
         print(" ")
 
