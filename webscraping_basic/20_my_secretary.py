@@ -46,3 +46,19 @@ print(f"초미세먼지 {ultra_dust}","\n")
 
 
 
+# [헤드라인 뉴스]
+url = "https://news.naver.com/"
+res = requests.get(url, headers=headers)
+res.raise_for_status()
+
+soup= BeautifulSoup(res.text, "lxml")
+
+news = soup.find("ul", attrs={"class":"hdline_article_list"}).find_all("div", attrs={"class":"hdline_article_tit"})
+print("[헤드라인 뉴스]")
+for idx, new in enumerate(news):
+    if idx >= 3:
+        break
+    else:    
+        print(idx+1+". ",new.get_text().strip())
+        print("링크 : https://news.naver.com/"+ new.a["href"])
+        print(" ")
