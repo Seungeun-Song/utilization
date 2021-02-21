@@ -62,3 +62,29 @@ for idx, new in enumerate(news):
         print(idx+1+". ",new.get_text().strip())
         print("링크 : https://news.naver.com/"+ new.a["href"])
         print(" ")
+
+# [IT 뉴스]
+url = "https://news.naver.com/main/list.nhn?mode=LS2D&mid=shm&sid1=105&sid2=230"
+res = requests.get(url, headers=headers)
+res.raise_for_status()
+
+soup = BeautifulSoup(res.text, "lxml")
+
+it_news = soup.find("div", attrs={"class":"list_body newsflash_body"}).find_all("dt")
+
+print("[IT 뉴스]")
+
+
+for idx, new in enumerate(it_news):
+    if idx >= 3:
+        break
+    elif new.a.get_text() == False:
+        pass
+    else:
+        new.a.get_text()
+        #title = new.a.get_text()
+        # word = ["블록체인", "빅데이터","인공지능","비트코인","알고리즘","AI"]
+        # if word in title:
+        print(str(idx+1)+". ", new.a.get_text().strip())
+        print("링크 : ", new.a["href"])
+    
