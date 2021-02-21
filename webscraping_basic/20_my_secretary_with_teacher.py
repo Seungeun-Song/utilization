@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import re
 
 def create_soup(url):
     headers = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"}
@@ -7,6 +8,10 @@ def create_soup(url):
     res.raise_for_status()
     soup = BeautifulSoup(res.text, "lxml")
     return soup
+
+def print_news(index, title, link):
+    print("{}. {}".format(index+1, title))
+    print("  (링크 : {})".format(link))
 
 def scrape_weather():
     print("[오늘의 날씨]")
@@ -49,14 +54,46 @@ def scrape_headline_news():
     for index, news in enumerate(news_list):
         title = news.find("a").get_text().strip()  # find는 첫번째 것만 찾으니까.
         link = url + news.find("a")["href"]
-        print("{}. {}".format(index+1, title))
-        print("  (링크 : {})".format(link))
+        print_news(index, title, link)
     print()
 
+
+def scrape_it_news():
+    print("[IT 뉴스]")
+    url = "https://news.naver.com/main/list.nhn?mode=LS2D&mid=shm&sid1=105&sid2=230"
+    soup = create_soup(url)
+    news_list = soup.find("ul", attrs={"class":"type06_headline"}).find_all("li", limit=3)
+    for index, news in enumerate(news_list):
+        a_idx = 0  # img 태그가 없으면 0번째 a태그 사용
+        img = news.find("img")
+        if img:
+            a_idx = 1 # img 태그가 있으면 1번째 a 태그의 정보를 사용
+        a_tag = news.find_all("a")[a_idx]
+        title = a_tag.get_text().strip()
+        link = a_tag["href"]
+        print_news(index, title, link)
+    print()
+
+def scrape_english():
+    print("[오늘의 영어 회화]")
+    url = "https://www.hackers.co.kr/?c=s_eng/eng_contents/I_others_english&keywd=haceng_submain_lnb_eng_I_others_english&logger_kw=haceng_submain_lnb_eng_I_others_english"
+    soup = create_soup(url)
+    sentences = soup.find_all("div", attrs={"id":re.compile("^conv_kor_t")})
+    print("(영어 지문)")
+    for sentence in sentences[len(sentences)//2:]: # (한글,영어 포함)8문장이 았다고 가정할 때, 5~8까지 잘라서 가져옴(index기분 4~7)
+        print(sentence.get_text().strip())
+    
+    print()
+    print("(한글 지문)")
+    for sentence in sentences[:len(sentences)//2]: # 0부터 3까지
+        print(sentence.get_text().strip())
+    print()
 
 
 if __name__ == "__main__":   # 해당 모듈이 임포트 된 경우가 아니라 인터프리터에서 직접 실행된 경우에만 if문을 실행
                              # 참조 (https://medium.com/@chullino/if-name-main-%EC%9D%80-%EC%99%9C-%ED%95%84%EC%9A%94%ED%95%A0%EA%B9%8C-bc48cba7f720)
     # 오늘의 날씨 정보 가져오기
-    #scrape_weather()  # 인터프리터로 실행하면 scrape_weather가 뜨고, 임포트하면 안뜬다
-    scrape_headline_news()
+    scrape_weather()  # 인터프리터로 실행하면 scrape_weather가 뜨고, 임포트하면 안뜬다
+    scrape_headline_news()  # 헤드라인 뉴스 정보 가져오기
+    scrape_it_news()   # IT 뉴스 정보 가져오기
+    scrape_english()  #오늘의 영어 회화 가져오기
