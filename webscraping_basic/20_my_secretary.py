@@ -88,3 +88,20 @@ for idx, new in enumerate(it_news):
         print(str(idx+1)+". ", new.a.get_text().strip())
         print("링크 : ", new.a["href"])
     
+
+
+
+
+# [오늘의 영어 회화]
+
+url = "https://www.hackers.co.kr/?c=s_eng/eng_contents/I_others_english"
+res = requests.get(url)
+res.raise_for_status()
+
+soup = BeautifulSoup(res.text, "lxml")
+
+conv= soup.find_all("div", attrs={"class":"conv_txtBox"})
+
+print("[오늘의 영어 회화]","\n")
+print("(영어지문)","\n", conv[1].get_text().strip())
+print("(한글지문)","\n", conv[0].get_text().strip())
